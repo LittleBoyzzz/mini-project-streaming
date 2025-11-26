@@ -100,7 +100,7 @@ def load_raw_data_chunked(
 def transform_and_aggregate(
     raw_table: str = "raw_data_200k",
     final_table: str = "user_metrics"
-) -> int:
+) -> pd.DataFrame:  
     engine = get_db_engine()
 
     if not test_connection(engine):
@@ -143,7 +143,8 @@ def transform_and_aggregate(
         print("Final aggregated data load complete. Table created/updated successfully.")
     except Exception as e:
         print(f"Error loading final data to database: {e}")
-        return len(df_agg)
+
+    return df_agg
 
 if __name__ == "__main__":
     import argparse
@@ -162,4 +163,5 @@ if __name__ == "__main__":
 
     load_raw_data_chunked(args.csv, args.chunksize, args.raw_table)
     
-    transform_and_aggregate(args.raw_table, args.final_table)
+    result_df = transform_and_aggregate(args.raw_table, args.final_table)
+    print(f"Done. Result shape: {result_df.shape}")

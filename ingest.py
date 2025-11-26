@@ -47,17 +47,26 @@ def test_connection(engine: Engine) -> bool:
 
 
 def main_ingest(
-    csv_path: str = "100k_a.csv",   
+    csv_path: str = "100k_a.csv",    
     chunk_size: int = 10000,
     table_name: str = "raw_data_100k"          
-) -> None:
+) -> int: 
 
     if not os.path.exists(csv_path):
         print(f"File not found: {csv_path}")
         sys.exit(1)
 
     print(f"Reading CSV: {csv_path}")
-    chunk_iter = pd.read_csv(csv_path, chunksize=chunk_size, low_memory=False)
+    
+    column_names = ['session_id', 'timestamp_ms', 'user_name', 'start_metric', 'end_metric']
+
+    chunk_iter = pd.read_csv(
+        csv_path, 
+        chunksize=chunk_size, 
+        low_memory=False,
+        header=None,          
+        names=column_names     
+    )
 
     engine = get_db_engine()
 
@@ -87,6 +96,8 @@ def main_ingest(
         first_chunk = False
 
     print(f"Ingestion complete. Total rows: {total_rows:,}")
+    
+    return total_rows
 
 
 if __name__ == "__main__":

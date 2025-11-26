@@ -53,8 +53,8 @@ def publish_to_gsheet(df: pd.DataFrame, sheet_name: str, worksheet_index: int = 
 
 
 def main():
-    FINAL_TABLE = "user_metrics"        # ตารางที่ ETL ของคุณสร้างไว้
-    GSHEET_NAME = "streaming"    # ชื่อ Google Sheet ของคุณ
+    FINAL_TABLE = "user_metrics"   
+    GSHEET_NAME = "streaming"   
 
     df = read_from_production(FINAL_TABLE)
 
